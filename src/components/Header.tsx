@@ -1,12 +1,15 @@
-import {useContext} from "react";
-import {AppContext} from "../App";
 import {Link} from "react-router-dom";
 import logo from "./../assets/img/pizza-logo.svg";
 import {useSelector} from "react-redux";
+import {setSearch} from "../redux/slices/filterSlice";
+import {RootState, useAppDispatch} from "../redux/store";
 
-function Header(props) {
-	const {totalPrice, totalCount} = useSelector((state) => state.cart);
-	const {searchValue, setSearchValue} = useContext(AppContext);
+const Header: React.FC = () => {
+	const dispatch = useAppDispatch();
+	const searchValue = useSelector((state: RootState) => state.filter.search);
+	const {totalPrice, totalCount} = useSelector(
+		(state: RootState) => state.cart,
+	);
 	return (
 		<div className="header">
 			<div className="container">
@@ -23,7 +26,7 @@ function Header(props) {
 					className="header__search"
 					type="search"
 					value={searchValue}
-					onChange={(e) => setSearchValue(e.target.value)}
+					onChange={(e) => dispatch(setSearch(e.target.value))}
 					placeholder="Название пиццы"
 				/>
 				<div className="header__cart">
@@ -64,6 +67,6 @@ function Header(props) {
 			</div>
 		</div>
 	);
-}
+};
 
 export default Header;

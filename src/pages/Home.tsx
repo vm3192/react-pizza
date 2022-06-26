@@ -3,22 +3,46 @@ import PizzaBlock from "../components/PizzaBlock/Index";
 import ReactPaginate from "react-paginate";
 import Skeleton from "../components/PizzaBlock/Skeleton";
 import Sort from "../components/Sort";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 
-const Home = (props) => {
-	const [currentItems, setCurrentItems] = useState([]);
+type HomeProps = {
+	pizzas: {
+		id: string;
+		imageUrl: string;
+		name: string;
+		types: number[];
+		sizes: number[];
+		price: number;
+		category: number;
+		rating: number;
+	}[];
+};
+
+type Pizza = {
+	id: string;
+	imageUrl: string;
+	name: string;
+	types: number[];
+	sizes: number[];
+	price: number;
+	category: number;
+	rating: number;
+};
+
+const Home: React.FC<HomeProps> = ({pizzas}) => {
+	const [currentItems, setCurrentItems] = useState<Pizza[]>([]);
 	const [pageCount, setPageCount] = useState(0);
 	const [itemOffset, setItemOffset] = useState(0);
 	const itemsPerPage = 6;
 
 	useEffect(() => {
 		const endOffset = itemOffset + itemsPerPage;
-		setCurrentItems(props.pizzas.slice(itemOffset, endOffset));
-		setPageCount(Math.ceil(props.pizzas.length / itemsPerPage));
-	}, [itemOffset, itemsPerPage, props.pizzas]);
+		setCurrentItems(pizzas.slice(itemOffset, endOffset));
+		setPageCount(Math.ceil(pizzas.length / itemsPerPage));
+	}, [itemOffset, itemsPerPage, pizzas]);
 
-	const handlePageClick = (event) => {
-		const newOffset = (event.selected * itemsPerPage) % props.pizzas.length;
+	const handlePageClick = (event: {selected: number}): void => {
+		const newOffset = (event.selected * itemsPerPage) % pizzas.length;
 		setItemOffset(newOffset);
 	};
 
@@ -30,7 +54,7 @@ const Home = (props) => {
 			</div>
 			<h2 className="content__title">Все пиццы</h2>
 			<div className="content__items">
-				{props.pizzas.length !== 0
+				{pizzas.length !== 0
 					? //sorting in 3 ways
 					  currentItems.map((pizza) => (
 							<PizzaBlock key={pizza.id} {...pizza} />
@@ -44,7 +68,6 @@ const Home = (props) => {
 				pageRangeDisplayed={3}
 				pageCount={pageCount}
 				previousLabel="prev"
-				renderOnZeroPageCount={null}
 				containerClassName="pagination"
 				pageLinkClassName="pagination__link"
 				previousLinkClassName="pagination__link pagination__link--pag_prev"

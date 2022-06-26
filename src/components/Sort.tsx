@@ -1,18 +1,20 @@
-import {useEffect, useRef, useState} from "react";
-import {useSelector, useDispatch} from "react-redux";
+import React, {useEffect, useRef, useState} from "react";
+import {useSelector} from "react-redux";
 import {changeSortId} from "../redux/slices/filterSlice";
+import {RootState, useAppDispatch} from "../redux/store";
 
-function Sort(props) {
+const Sort: React.FC = () => {
 	const [visiblePopup, setVisiblePopup] = useState(false);
-	const dispatch = useDispatch();
-	const activeSortItem = useSelector((state) => state.filter.sortId);
-	const sortRef = useRef();
+	const dispatch = useAppDispatch();
+	const activeSortItem = useSelector((state: RootState) => state.filter.sortId);
+	const sortRef = useRef<HTMLDivElement>(null);
 
 	const sortArr = ["популярности", "цене", "алфавиту"];
 
 	useEffect(() => {
-		const handleClick = (e) => {
-			if (!e.path.includes(sortRef.current)) {
+		const handleClick = (e: MouseEvent): void => {
+			const _e = e as MouseEvent & {path: Node[]};
+			if (sortRef.current && !_e.path.includes(sortRef.current)) {
 				setVisiblePopup(false);
 			}
 		};
@@ -58,6 +60,6 @@ function Sort(props) {
 			)}
 		</div>
 	);
-}
+};
 
 export default Sort;

@@ -1,25 +1,42 @@
-import { useDispatch } from "react-redux";
-import { countPlus, countMinus, removeItem } from "../redux/slices/cartSlice";
+import {countPlus, countMinus, removeItem} from "../redux/slices/cartSlice";
+import {useAppDispatch} from "../redux/store";
 
+type CartItemProps = {
+	id: string;
+	imageUrl: string;
+	name: string;
+	price: number;
+	type: string;
+	size: number;
+	count: number;
+};
 
-const CartItem = ({id, imageUrl, name, price, type, size, count}) => {
-	const dispatch = useDispatch()
+const CartItem: React.FC<CartItemProps> = ({
+	id,
+	imageUrl,
+	name,
+	price,
+	type,
+	size,
+	count,
+}) => {
+	const dispatch = useAppDispatch();
 
 	return (
 		<div className="cart__item">
 			<div className="cart__item-img">
-				<img
-					className="pizza-block__image"
-					src={imageUrl}
-					alt="Pizza"
-				/>
+				<img className="pizza-block__image" src={imageUrl} alt="Pizza" />
 			</div>
 			<div className="cart__item-info">
 				<h3>{name}</h3>
-				<p>{type}, {size} см</p>
+				<p>
+					{type}, {size} см
+				</p>
 			</div>
 			<div className="cart__item-count">
-				<button className="button button--outline button--circle cart__item-count-minus" onClick={() => dispatch(countMinus(id))}>
+				<button
+					className="button button--outline button--circle cart__item-count-minus"
+					onClick={() => dispatch(countMinus(id))}>
 					<svg
 						width="10"
 						height="10"
@@ -37,7 +54,9 @@ const CartItem = ({id, imageUrl, name, price, type, size, count}) => {
 					</svg>
 				</button>
 				<b>{count}</b>
-				<button className="button button--outline button--circle cart__item-count-plus" onClick={() => dispatch(countPlus(id))}>
+				<button
+					className="button button--outline button--circle cart__item-count-plus"
+					onClick={() => dispatch(countPlus(id))}>
 					<svg
 						width="10"
 						height="10"
@@ -59,7 +78,9 @@ const CartItem = ({id, imageUrl, name, price, type, size, count}) => {
 				<b>{price * count} грн</b>
 			</div>
 			<div className="cart__item-remove">
-				<button className="button button--outline button--circle" onClick={() => dispatch(removeItem(id))}>
+				<button
+					className="button button--outline button--circle"
+					onClick={() => dispatch(removeItem(id))}>
 					<svg
 						width="10"
 						height="10"

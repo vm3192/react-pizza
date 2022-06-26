@@ -1,4 +1,4 @@
-import {createContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {onValue, ref} from "firebase/database";
 import {Route, Routes} from "react-router-dom";
 import {useSelector} from "react-redux";
@@ -10,22 +10,34 @@ import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 
 import "./scss/app.scss";
+import {RootState} from "./redux/store";
 
-export const AppContext = createContext("");
+type Pizza = {
+	id: string;
+	imageUrl: string;
+	name: string;
+	types: number[];
+	sizes: number[];
+	price: number;
+	category: number;
+	rating: number;
+};
 
-function App() {
-	const [pizzas, setPizzas] = useState([]);
-	const activeCategory = useSelector((state) => state.filter.categoryId);
-	const activeSortItem = useSelector((state) => state.filter.sortId);
-	const [searchValue, setSearchValue] = useState("");
+const App: React.FC = () => {
+	const [pizzas, setPizzas] = useState<Pizza[]>([]);
+	const activeCategory = useSelector(
+		(state: RootState) => state.filter.categoryId,
+	);
+	const activeSortItem = useSelector((state: RootState) => state.filter.sortId);
+	const searchValue = useSelector((state: RootState) => state.filter.search);
 
 	useEffect(() => {
-		let data;
+		let data: Pizza[];
 		onValue(ref(db), (snapshot) => {
 			if (activeCategory) {
 				data = snapshot
 					.val()
-					.filter((item) => item.category === activeCategory);
+					.filter((item: Pizza) => item.category === activeCategory);
 			} else {
 				data = snapshot.val();
 			}
@@ -50,23 +62,18 @@ function App() {
 
 	return (
 		<div className="wrapper">
-			<AppContext.Provider value={{searchValue, setSearchValue}}>
-				<Header />
-				<div className="content">
-					<div className="container">
-						<Routes>
-							<Route
-								path="/"
-								element={<Home pizzas={pizzas} searchValue={searchValue} />}
-							/>
-							<Route path="/cart" element={<Cart />} />
-							<Route path="*" element={<NotFound />} />
-						</Routes>
-					</div>
+			<Header />
+			<div className="content">
+				<div className="container">
+					<Routes>
+						<Route path="/" element={<Home pizzas={pizzas} />} />
+						<Route path="/cart" element={<Cart />} />
+						<Route path="*" element={<NotFound />} />
+					</Routes>
 				</div>
-			</AppContext.Provider>
+			</div>
 		</div>
 	);
-}
+};
 
 export default App;

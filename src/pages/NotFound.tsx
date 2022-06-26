@@ -1,6 +1,6 @@
 import Error from "../components/Error";
 
-const NotFound = (props) => {
+const NotFound: React.FC = () => {
 	return(
 		<Error />
 	)

@@ -1,6 +1,6 @@
 import styles from "./Error.module.scss";
 
-const Error = (props) => {
+const Error: React.FC = () => {
 	return (
 		<div className={styles.error}>
 			<p>Error 404</p>

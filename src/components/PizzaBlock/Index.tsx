@@ -1,12 +1,28 @@
 import {useState} from "react";
-import {useDispatch} from "react-redux";
 import {addItem} from "../../redux/slices/cartSlice";
+import {useAppDispatch} from "../../redux/store";
 
-function PizzaBlock({id, imageUrl, name, types, sizes, price}) {
-	const dispatch = useDispatch();
+type PizzaBlockProps = {
+	id: string;
+	imageUrl: string;
+	name: string;
+	types: number[];
+	sizes: number[];
+	price: number;
+};
+
+const PizzaBlock: React.FC<PizzaBlockProps> = ({
+	id,
+	imageUrl,
+	name,
+	types,
+	sizes,
+	price,
+}) => {
+	const dispatch = useAppDispatch();
 	const typesArr = ["тонкое", "традиционное"];
-	const [activeType, setActiveType] = useState(0);
-	const [activeSize, setActiveSize] = useState(0);
+	const [activeType, setActiveType] = useState<number>(0);
+	const [activeSize, setActiveSize] = useState<number>(0);
 
 	const addPizza = () => {
 		const pizza = {
@@ -68,6 +84,6 @@ function PizzaBlock({id, imageUrl, name, types, sizes, price}) {
 			</div>
 		</div>
 	);
-}
+};
 
 export default PizzaBlock;
